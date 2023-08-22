@@ -1,0 +1,19 @@
+{
+  "name": "calculating-development-display-oan41",
+  "productName": "calculating-development-display-oan41",
+  "description": "My Electron application description",
+  "keywords": [],
+  "main": "./main.js",
+  "version": "1.0.0",
+  "author": "fundalap-nh39",
+  "scripts": {
+    "build": "npm i electron",
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^25.6.0"
+  },
+  "dependencies": {
+    "path": "^0.12.7"
+  }
+}
