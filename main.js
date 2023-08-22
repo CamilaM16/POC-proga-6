@@ -1,7 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const { exec } = require('node:child_process');
+const { spawn, exec } = require('node:child_process');
+require('dotenv').config();
 
+const password = process.env.PASSWORD;
 let mainWindow;
 
 app.on('ready', () => {
@@ -17,10 +19,19 @@ app.on('ready', () => {
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
-  ipcMain.on('command', (event, command) => {
-    runCommand(command);
-    const response = `Response for the command: ${command}`;
-    event.sender.send('response', response);
+  ipcMain.on('command', (event, command, isSudo) => {
+    const child = isSudo ? runSudoCommand(command) : runCommand(command);
+    let dataOutput ;
+    child.stdout.on('data', (data) => {
+      dataOutput = data;
+    });
+
+    child.on('exit', (code, signal) =>{
+      event.sender.send('response', 
+        `Stdout:\n${dataOutput}\n` +
+        'Child process exited with code ' + 
+        `${code} and signal ${signal}`);
+    });
   });
 
   mainWindow.on('closed', () => {
@@ -34,17 +45,16 @@ app.on('window-all-closed', () => {
   }
 });
 
-function runCommand(command) {
+function runSudoCommand(command) {
+  const child = spawn('sudo', ['-S', 'sh', '-c', command]);
+  child.stdin.write(password + '\n');
+  child.stdin.end();
+  return child;
+}
 
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`Stderr: ${stderr}`);
-      return;
-    }
-    console.log(`Resultado: ${stdout}`);
+function runCommand(command) {
+  const child = spawn(command, {
+    shell: true
   });
+  return child;
 }

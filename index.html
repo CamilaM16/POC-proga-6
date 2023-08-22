@@ -1,16 +1,32 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Command Line Interface</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="cli">
     <h2 class="cli-title">Command Line Interface</h2>
-    <input id="input" class="cli-input" type="text" autofocus/>
-    <button id="runButton" class="cli-button" onclick="runCommand()" >Run</button>
+
+    <div class="container">
+      <p class="inline-item">Not sudo</p>
+      <div class="toggle-button-cover inline-item">
+        <div id="button-3" class="button r">
+          <input id="checkbox" class="checkbox" type="checkbox">
+          <div class="knobs"></div>
+          <div class="layer"></div>
+        </div>
+      </div>
+    </div>
+    
+    <input id="input" class="cli-input" type="text" placeholder="ls -l" autofocus />
+    
+    <button id="runButton" class="cli-button" onclick="runCommand()">Run</button>
     <pre id="output" class="cli-output"></pre>
     <script src="./renderer.js"></script>
   </div>
 </body>
+
 </html>
