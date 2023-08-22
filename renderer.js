@@ -1,21 +1,21 @@
 
 const runButton = document.getElementById('runButton');
+const outputElement = document.getElementById('output');
 
 function runCommand() {
   const inputElement = document.getElementById('input');
+  const checkbox = document.getElementById('checkbox');
   const inputText = inputElement.value;
-  window.api.send("command", inputText);
+  window.api.send("command", inputText, checkbox.checked);
+
   window.api.receive("response", (data) => {
-    appendOutput(`> ${inputText}\n`+data);
+    appendOutput(inputText, data);
   });
   inputElement.value = '';
-  console.log(inputText);
 }
 
-function appendOutput(text) {
-  const outputElement = document.getElementById('output');
-  console.log(text);
-  outputElement.textContent += text + '\n';
+function appendOutput(text, data) {
+  outputElement.textContent = `$ ${text}\n${data}\n`;
 }
 
 inputElement.addEventListener('keydown', (event) => {
@@ -26,9 +26,4 @@ inputElement.addEventListener('keydown', (event) => {
   } 
 });
 
-function run() {
-  console.log("Run...");
-}
-
 runButton.addEventListener('click', runCommand);
-console.log("hola")

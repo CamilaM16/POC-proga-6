@@ -23,10 +23,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 contextBridge.exposeInMainWorld(
   "api", {
-      send: (channel, data) => {
+      send: (channel, data, isSudo) => {
           let validChannels = ["command"];
           if (validChannels.includes(channel)) {
-              ipcRenderer.send(channel, data);
+              ipcRenderer.send(channel, data, isSudo);
           }
       },
       receive: (channel, func) => {
